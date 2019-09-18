@@ -1,1 +1,1 @@
-web: simple-server-exe
+web: simple-server-exe $PORT

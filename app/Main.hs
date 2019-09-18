@@ -6,6 +6,7 @@ import Data.IORef (readIORef, writeIORef, modifyIORef, newIORef, IORef)
 import Data.Maybe (fromJust)
 import Data.List
 import Data.Aeson
+import System.Environment
 import Control.Monad
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
@@ -56,6 +57,7 @@ craftResponse mails =
 
 main :: IO ()
 main = do
+    args <- getArgs
     mailbox <- newIORef [] :: IO (IORef ([(T.Text, T.Text)]))
     putStrLn $ "http://localhost:8080/"
-    run 8080 $ app mailbox
+    run (read . head $ args :: Int) $ app mailbox
