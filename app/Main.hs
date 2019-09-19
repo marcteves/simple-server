@@ -65,6 +65,6 @@ craftResponse mails =
 -- internal state and a port number
 main :: IO ()
 main = do
-    args <- getArgs
+    port <- (read . head ) `liftM` getArgs :: IO Int
     mailbox <- newIORef [] :: IO (IORef Mailbox)
-    run (read . head $ args :: Int) $ app mailbox
+    run port $ app mailbox
