@@ -28,6 +28,7 @@ dependencies:
 - aeson
 - containers
 - text
+- simple-server-internal
 
 library:
   source-dirs: src

@@ -21,20 +21,13 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - base >= 4.7 && < 5
+- text
+- aeson
 
 library:
   source-dirs: src
-
-executables:
-  simple-server-internal-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - simple-server-internal
+  exposed-modules:
+      - SimpleServer.Types
 
 tests:
   simple-server-internal-test:

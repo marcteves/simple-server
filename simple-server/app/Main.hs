@@ -1,4 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
+import SimpleServer.Types
+
 import Network.Wai
 import Network.HTTP.Types
 import Network.Wai.Handler.Warp (run)
@@ -8,17 +10,7 @@ import Data.List
 import Data.Aeson
 import System.Environment
 import Control.Monad
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as TE
-
--- These data types indicate the requests the web app can process
-data AppRequest = Send T.Text T.Text
-                | Receive T.Text
-                | Hello
-                | Invalid
-
-type Mail = (T.Text, T.Text)
-type Mailbox = [Mail]
+import qualified Data.Text.Encoding as TE (decodeUtf8)
 
 -- Augmented Application type, adding an IORef for tracking internal state
 app :: IORef Mailbox -> Application
@@ -61,7 +53,7 @@ craftResponse mails =
     responseLBS status200 [(hContentType, "application/json")] jsonmails
     where jsonmails = encode mails
 
--- main just calls the augmented Application above with an IORef to the 
+-- main just calls the augmented Application above with an IORef to the
 -- internal state and a port number
 main :: IO ()
 main = do
