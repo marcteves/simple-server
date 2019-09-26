@@ -10,6 +10,7 @@ import Data.List
 import Data.Aeson
 import System.Environment
 import Control.Monad
+import qualified Data.Text as T (toUpper)
 import qualified Data.Text.Encoding as TE (decodeUtf8)
 
 -- Augmented Application type, adding an IORef for tracking internal state
@@ -35,7 +36,7 @@ appRequest request
 
 appResponse :: IORef Mailbox -> AppRequest -> IO Response
 appResponse mailbox (Send addr message) = do
-    modifyIORef mailbox $ (:) (Mail addr message)
+    modifyIORef mailbox $ (:) (Mail addr (T.toUpper message))
     mails <- readIORef mailbox
     return $ craftResponse mails
 
