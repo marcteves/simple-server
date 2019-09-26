@@ -1,4 +1,5 @@
-URL="http://simple-serb.herokuapp.com"
+# URL="http://simple-serb.herokuapp.com"
+URL="http://localhost:8080"
 
 declare -A methods
 
@@ -10,7 +11,7 @@ if [[ "$#" -lt 2 || ( $1 == "send" && $# -ne 3 )  ]]; then
 fi
 
 if [[ "$1" == "send" ]]; then
-    curl -X ${methods[$1]} "${URL}/?addr=$2&message=$3"
+    curl -GX ${methods[$1]} --data-urlencode addr="$2" --data-urlencode message="$3" "${URL}"
 elif [[ "$1" == "rec" ]]; then
     curl -X ${methods[$1]} "${URL}/?addr=$2"
 else

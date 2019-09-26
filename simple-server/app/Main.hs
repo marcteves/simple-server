@@ -15,8 +15,11 @@ import qualified Data.Text.Encoding as TE (decodeUtf8)
 -- Augmented Application type, adding an IORef for tracking internal state
 app :: IORef Mailbox -> Application
 app mailbox request respond = do
-    response <- appResponse mailbox . appRequest $ request
-    putStrLn . show . queryString $ request
+    let requestClass = appRequest request
+    response <- appResponse mailbox requestClass
+    case requestClass of
+        Send _ _ -> putStrLn . show $ request
+        _ -> return ()
     respond response
 
 -- Take an HTTP request and convert it into our app's self-defined types
@@ -32,12 +35,12 @@ appRequest request
 
 appResponse :: IORef Mailbox -> AppRequest -> IO Response
 appResponse mailbox (Send addr message) = do
-    modifyIORef mailbox $ (:) (addr, message)
+    modifyIORef mailbox $ (:) (Mail addr message)
     mails <- readIORef mailbox
     return $ craftResponse mails
 
 appResponse mailbox (Receive addr) = do
-    (sent, rest) <- ( partition ((==) addr . fst) ) `liftM` readIORef mailbox
+    (sent, rest) <- ( partition ((==) addr . address) ) `liftM` readIORef mailbox
     writeIORef mailbox rest
     return $ craftResponse sent
 
